@@ -23,17 +23,20 @@ sub generate_value {
       %{$args}
     );
   } elsif (my $name = $this->relative_to) {
-    if (my $orig = $maker->in_progress($name)) {
-      if (ref($orig) eq 'DateTime') {
-        $dt = $orig->clone;
-        my $params;
-        if ($params = $this->subtract) {
-          my $new_params = check_params($params);
-          $dt->subtract_duration( DateTime::Duration->new( %{$new_params} ));
-        } elsif ($params = $this->add) {
-          my $new_params = check_params($params);
-          $dt->add_duration( DateTime::Duration->new( %{$new_params} ));
-        }
+    my $orig;
+    if ($orig = $maker->in_progress($name)) {
+    } elsif ( grep(/^$name$/i, qw( now today ) ) ) {
+      $orig = DateTime->now;
+    }
+    if (ref($orig) eq 'DateTime') {
+      $dt = $orig->clone;
+      my $params;
+      if ($params = $this->subtract) {
+        my $new_params = check_params($params);
+        $dt->subtract_duration( DateTime::Duration->new( %{$new_params} ));
+      } elsif ($params = $this->add) {
+        my $new_params = check_params($params);
+        $dt->add_duration( DateTime::Duration->new( %{$new_params} ));
       }
     }
   }
