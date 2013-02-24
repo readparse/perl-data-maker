@@ -1,3 +1,9 @@
+0.30 (02.24.2013) - John Ingram<john@funnycow.com>
+  * Data::Maker::Field::Lorem: In addition to passing a fixed number for the 
+    number of words, sentences or paragraphs, you can also pass an array reference 
+    of values, from which a random value is chosen.  For example, if you want 
+    between 3 and 12 words.  
+
 0.29 (02.23.2013) - John Ingram<john@funnycow.com>
   * added relative date support, so you can define one DateTime field that is 
     either a fixed or random duration away from another DateTime field.

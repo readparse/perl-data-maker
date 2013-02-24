@@ -3,25 +3,36 @@ use Moose;
 with 'Data::Maker::Field';
 use Text::Lorem;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
-has words => ( is => 'rw', isa => 'Num' );
-has sentences => ( is => 'rw', isa => 'Num' );
-has paragraphs => ( is => 'rw', isa => 'Num' );
+has words => ( is => 'rw');
+has sentences => ( is => 'rw');
+has paragraphs => ( is => 'rw');
 
 sub generate_value {
   my $this = shift;
   my $lorem = new Text::Lorem;
   if ($this->words) {
-    return $lorem->words($this->words); 
+    return $lorem->words(check($this->words)); 
   }
   if ($this->sentences) {
-    return $lorem->sentences($this->sentences); 
+    return $lorem->sentences(check($this->sentences)); 
   }
   if ($this->paragraphs) {
-    return $lorem->paragraphs($this->paragraphs); 
+    return $lorem->paragraphs(check($this->paragraphs)); 
   }
 }
+
+sub check {
+  my $value = shift;
+  if (my $ref = ref($value)) {
+    if ($ref eq 'ARRAY') {
+      $value = Data::Maker->random( $value );
+    }
+  }
+  return $value;
+}
+
 1;
 
 __END__

@@ -4,7 +4,7 @@ use Moose;
 use Data::Maker::Value;
 use Data::Maker::Field::Format;
 
-our $VERSION = '0.29';
+our $VERSION = '0.30';
 
 has fields => ( is => 'rw', isa => 'ArrayRef', auto_deref => 1 );
 has record_count => ( is => 'rw', isa => 'Num' );
