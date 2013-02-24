@@ -3,7 +3,7 @@ use Moose;
 use DateTime::Event::Random;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 has start => ( is => 'rw');
 has end => ( is => 'rw');
@@ -11,6 +11,12 @@ has format => ( is => 'rw');
 has relative_to => ( is => 'rw');
 has subtract => ( is => 'rw', isa => 'HashRef'); 
 has add => ( is => 'rw', isa => 'HashRef');
+has year => ( is => 'rw', isa => 'Num');
+has month => ( is => 'rw', isa => 'Num');
+has day => ( is => 'rw', isa => 'Num');
+has hour => ( is => 'rw', isa => 'Num');
+has minute => ( is => 'rw', isa => 'Num');
+has second => ( is => 'rw', isa => 'Num');
 
 sub generate_value {
   my ($this, $maker) = @_;
@@ -41,6 +47,14 @@ sub generate_value {
       }
     }
   }
+
+  $dt->set_year( $this->year ) if defined $this->year;
+  $dt->set_month( $this->month ) if defined $this->month;
+  $dt->set_day( $this->day ) if defined $this->day;
+  $dt->set_hour( $this->hour ) if defined $this->hour;
+  $dt->set_minute( $this->minute ) if defined $this->minute;
+  $dt->set_second( $this->second ) if defined $this->second;
+
   if ($this->format) {
     return &{$this->format}($dt);
   }

@@ -3,6 +3,11 @@
     number of words, sentences or paragraphs, you can also pass an array reference 
     of values, from which a random value is chosen.  For example, if you want 
     between 3 and 12 words.  
+  * Data::Maker::Field::DateTime: In the event that the randomly-generated DateTime
+    fields need to all have a specific attribute in common (for example, the 15th 
+    of the month, or a time of midnight), you can now pass any of the values year,
+    month, day, hour, minute, or second, and the randomly-generated DateTime object
+    will apply each of the passed in values before returning the object
 
 0.29 (02.23.2013) - John Ingram<john@funnycow.com>
   * added relative date support, so you can define one DateTime field that is 
