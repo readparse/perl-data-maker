@@ -67,15 +67,15 @@ Data::Maker::Field::Lorem takes any of the following arguments, which are passed
 
 =item * B<words>
 
-The number of words to generate
+The number of words to generate.  You can pass either a fixed number or an array reference containing a list or a range of values from which a random value will be chosen.
 
 =item * B<sentences>
 
-The number of sentences to generate
+The number of sentences to generate.  You can pass either a fixed number or an array reference containing a list or a range of values from which a random value will be chosen.
 
 =item * B<paragraphs>
 
-The number of paragraphs to generate
+The number of paragraphs to generate.  You can pass either a fixed number or an array reference containing a list or a range of values from which a random value will be chosen.
 
 =back
 
