@@ -156,6 +156,29 @@ It can either be a fixed value...
 
 This parameter is just like C<subtract()> (above), but it moves the L<Data::Maker::Field::DateTime> object in the opposite direction.
 
+=item * B<year>
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random date that always falls in a certain year, roughly the equivalent of passing the same year as both the C<start> and C<end> parameters.
+
+=item * B<month>
+
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random date that always falls in a certain month.
+
+=item * B<day>
+
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random date that always falls on, say, the 15th of the month.
+
+=item * B<hour>
+
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random datetime that always has the same hour.
+
+=item * B<minute>
+
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random datetime that always has the same minute.
+
+=item * B<second>
+
+If provided, this value will be passed to the L<DateTime> object before it is returned.  This can be used to generate a random datetime that always has the same second.
+
 =back
 
 =head1 AUTHOR
