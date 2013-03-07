@@ -2,8 +2,6 @@ package Data::Maker::Value;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
-
 use overload '""' => 'value';
 
 sub new {

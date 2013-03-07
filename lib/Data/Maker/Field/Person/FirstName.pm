@@ -2,8 +2,6 @@ package Data::Maker::Field::Person::FirstName;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.08';
-
 our @_Names;
 has names => ( is => 'ro', default => sub { \@_Names }, lazy => 1 );
 

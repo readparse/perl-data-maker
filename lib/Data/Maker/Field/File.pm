@@ -2,8 +2,6 @@ package Data::Maker::Field::File;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.08';
-
 has filename => ( is => 'rw' );
 
 sub generate_value {

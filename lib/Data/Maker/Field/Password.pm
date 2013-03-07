@@ -3,8 +3,6 @@ use Data::Maker::Field::Format;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.20';
-
 has length => ( is => 'rw', isa => 'Num', default => 8);
 has numbers => ( is => 'rw', isa => 'Bool', default => 1);
 

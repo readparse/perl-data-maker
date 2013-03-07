@@ -2,8 +2,6 @@ package Data::Maker::Field::MultiSet;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.16';
-
 has sets => ( is => 'rw', isa => 'ArrayRef[ArrayRef]' );
 has delimiter => ( is => 'rw', isa => 'Str', default => ' ' );
 

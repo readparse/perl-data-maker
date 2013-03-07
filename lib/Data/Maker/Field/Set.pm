@@ -2,8 +2,6 @@ package Data::Maker::Field::Set;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.10';
-
 has set => ( is => 'rw', isa => 'ArrayRef' );
 
 sub generate_value {

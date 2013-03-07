@@ -2,8 +2,6 @@ package Data::Maker::Record;
 use Moose;
 use vars qw( $AUTOLOAD );
 
-our $VERSION = '0.14';
-
 has delimiter => ( is => 'rw' );
 has fields => ( is => 'rw', isa => 'ArrayRef', auto_deref => 1 );
 has data => ( is => 'rw', isa => 'HashRef' );

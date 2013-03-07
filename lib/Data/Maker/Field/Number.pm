@@ -6,8 +6,6 @@ use MooseX::Aliases;
 with 'Data::Maker::Field';
 use Data::Dumper;
 
-our $VERSION = '0.24';
-
 subtype 'PositiveInt'
   => as 'Int'
   => where { $_ > 0 }

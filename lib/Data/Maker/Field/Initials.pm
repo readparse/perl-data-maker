@@ -2,8 +2,6 @@ package Data::Maker::Field::Initials;
 use Moose;
 extends 'Data::Maker::Field::Code';
 
-our $VERSION = '0.17';
-
 has from_field => ( is => 'rw', isa => 'Str' );
 has from_field_set => ( is => 'rw', isa => 'ArrayRef' );
 

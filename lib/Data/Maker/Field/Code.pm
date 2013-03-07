@@ -2,8 +2,6 @@ package Data::Maker::Field::Code;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.09';
-
 has code => ( is => 'rw', isa => 'CodeRef');
 
 sub generate_value {

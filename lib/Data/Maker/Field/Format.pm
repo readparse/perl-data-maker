@@ -2,8 +2,6 @@ package Data::Maker::Field::Format;
 use Moose;
 with 'Data::Maker::Field';
 
-our $VERSION = '0.09';
-
 has format => ( is => 'rw');
 
 my @digits     = (0..9);

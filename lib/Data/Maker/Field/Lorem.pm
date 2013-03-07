@@ -3,8 +3,6 @@ use Moose;
 with 'Data::Maker::Field';
 use Text::Lorem;
 
-our $VERSION = '0.11';
-
 has words => ( is => 'rw');
 has sentences => ( is => 'rw');
 has paragraphs => ( is => 'rw');

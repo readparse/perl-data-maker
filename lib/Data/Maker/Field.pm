@@ -1,8 +1,6 @@
 package Data::Maker::Field;
 use Moose::Role;
 
-our $VERSION = '0.28';
-
 has name      => ( is => 'rw' );
 has class     => ( is => 'rw' );
 has args      => ( is => 'rw', isa => 'HashRef' );

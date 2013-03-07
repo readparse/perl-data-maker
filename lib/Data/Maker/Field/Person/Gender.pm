@@ -3,8 +3,6 @@ use Moose;
 extends 'Data::Maker::Field::Code';
 use Text::GenderFromName;
 
-our $VERSION = '0.20';
-
 has from_field => ( is => 'rw', isa => 'Str');
 has from_name => ( is => 'rw', isa => 'Str');
 has allow_unknown => ( is => 'rw', isa => 'Bool', default => 1);
