@@ -3,8 +3,9 @@ use Data::Maker::Record;
 use Moose;
 use Data::Maker::Value;
 use Data::Maker::Field::Format;
+use Digest::MD5 qw(md5_hex);
 
-our $VERSION = '0.30.1';
+our $VERSION = '0.31';
 
 has fields => ( is => 'rw', isa => 'ArrayRef', auto_deref => 1 );
 has record_count => ( is => 'rw', isa => 'Num' );
@@ -16,20 +17,24 @@ has generated => ( is => 'rw', isa => 'Num', default => 0);
 has seed => ( is => 'rw', isa => 'Num');
 has record_class => ( is => 'rw', default => sub {'Data::Maker::Record'} );
 has record_continuity => ( is => 'rw', isa => 'Bool', default => 0 );
-has current_seed => ( is => 'rw', isa => 'Num' );
+has initial_seed => ( is => 'rw', isa => 'Num' );
+has epoch => ( is => 'rw', isa => 'Num' );
+has offset => ( is => 'rw', isa => 'Num', default => 0 );
 
 sub BUILD {
   my $this = shift;
-  if ($this->seed) {
-    unless($Data::Maker::Seeded) {
-      srand($this->seed);
-      $Data::Maker::Seeded = 1;
-    }
-    $this->current_seed($this->seed);
+  my $seed = $this->initial_seed // $this->seed;
+  if ($seed) {
+    $this->initial_seed($seed);
+  } elsif ($this->record_continuity) {
+    $this->initial_seed(int(rand(2**31)));
   }
-  elsif ($this->record_continuity) {
-    $this->current_seed(int(rand(2**31)));
-  }
+  $this->epoch(time()) unless defined $this->epoch;
+}
+
+sub _seed_for_record {
+  my ($this, $index) = @_;
+  return hex(substr(md5_hex($this->initial_seed . ':' . $index), 0, 8));
 }
 
 sub reset {
@@ -68,24 +73,19 @@ sub _field_objects {
 sub next_record {
   my $this = shift;
   return if $this->generated >= $this->record_count;
-  my $input_seed;
-  if ($this->record_continuity) {
-    $input_seed = $this->current_seed;
-    srand($input_seed);
-  }
+  my $global_index = $this->offset + $this->generated;
+  srand($this->_seed_for_record($global_index)) if defined $this->initial_seed;
   my $record = {};
   $this->{_in_progress} = $record;
   for my $field (@{ $this->_field_objects }) {
     $record->{ $field->name } = Data::Maker::Value->new($field->generate($this)->value);
   }
   if ($this->record_continuity) {
-    my $next_seed = int(rand(2**31));
-    $record->{_seed} = Data::Maker::Value->new($input_seed);
-    $record->{_next_seed} = Data::Maker::Value->new($next_seed);
-    $this->current_seed($next_seed);
+    $record->{_seed}  = Data::Maker::Value->new($this->initial_seed);
+    $record->{_index} = Data::Maker::Value->new($global_index);
   }
-  my $obj = $this->record_class->new(data => $record, fields => [$this->fields], delimiter => $this->delimiter );
-  $this->generated( $this->generated + 1 );
+  my $obj = $this->record_class->new(data => $record, fields => [$this->fields], delimiter => $this->delimiter);
+  $this->generated($this->generated + 1);
   return $obj;
 }
 

@@ -31,7 +31,7 @@ sub generate_value {
     my $orig;
     if ($orig = $maker->in_progress($name)) {
     } elsif ( grep(/^$name$/i, qw( now today ) ) ) {
-      $orig = DateTime->now;
+      $orig = $maker->can('epoch') ? DateTime->from_epoch(epoch => $maker->epoch) : DateTime->now;
     }
     if (ref($orig) eq 'DateTime') {
       $dt = $orig->clone;
@@ -62,7 +62,7 @@ sub generate_value {
 sub check_params {
   my $params = shift;
 	my %params = %{$params};
-  for my $key(keys(%params)) {
+  for my $key(sort keys(%params)) {
     my $value = $params{$key};
     if ( my $ref = ref($value) ) {
       if ($ref eq 'ARRAY') {
