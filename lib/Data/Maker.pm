@@ -14,6 +14,7 @@ has record_counts => ( is => 'rw', isa => 'HashRef', default => sub { {} } );
 has delimiter => ( is => 'rw', default => "\t" );
 has generated => ( is => 'rw', isa => 'Num', default => 0);
 has seed => ( is => 'rw', isa => 'Num');
+has record_class => ( is => 'rw', default => sub {'Data::Maker::Record'} );
 
 sub BUILD {
   my $this = shift;
@@ -66,7 +67,7 @@ sub next_record {
   for my $field (@{ $this->_field_objects }) {
     $record->{ $field->name } = Data::Maker::Value->new($field->generate($this)->value);
   }
-  my $obj = Data::Maker::Record->new(data => $record, fields => [$this->fields], delimiter => $this->delimiter );
+  my $obj = $this->record_class->new(data => $record, fields => [$this->fields], delimiter => $this->delimiter );
   $this->generated( $this->generated + 1 );
   return $obj;
 }
