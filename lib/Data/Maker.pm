@@ -15,6 +15,8 @@ has delimiter => ( is => 'rw', default => "\t" );
 has generated => ( is => 'rw', isa => 'Num', default => 0);
 has seed => ( is => 'rw', isa => 'Num');
 has record_class => ( is => 'rw', default => sub {'Data::Maker::Record'} );
+has record_continuity => ( is => 'rw', isa => 'Bool', default => 0 );
+has current_seed => ( is => 'rw', isa => 'Num' );
 
 sub BUILD {
   my $this = shift;
@@ -23,6 +25,10 @@ sub BUILD {
       srand($this->seed);
       $Data::Maker::Seeded = 1;
     }
+    $this->current_seed($this->seed);
+  }
+  elsif ($this->record_continuity) {
+    $this->current_seed(int(rand(2**31)));
   }
 }
 
@@ -62,10 +68,21 @@ sub _field_objects {
 sub next_record {
   my $this = shift;
   return if $this->generated >= $this->record_count;
+  my $input_seed;
+  if ($this->record_continuity) {
+    $input_seed = $this->current_seed;
+    srand($input_seed);
+  }
   my $record = {};
   $this->{_in_progress} = $record;
   for my $field (@{ $this->_field_objects }) {
     $record->{ $field->name } = Data::Maker::Value->new($field->generate($this)->value);
+  }
+  if ($this->record_continuity) {
+    my $next_seed = int(rand(2**31));
+    $record->{_seed} = Data::Maker::Value->new($input_seed);
+    $record->{_next_seed} = Data::Maker::Value->new($next_seed);
+    $this->current_seed($next_seed);
   }
   my $obj = $this->record_class->new(data => $record, fields => [$this->fields], delimiter => $this->delimiter );
   $this->generated( $this->generated + 1 );
