@@ -4,11 +4,45 @@ with 'Data::Maker::Field';
 
 has set => ( is => 'rw', isa => 'ArrayRef' );
 
+has _weighted => (
+  is      => 'ro',
+  lazy    => 1,
+  builder => '_build_weighted',
+);
+
+sub _build_weighted {
+  my $this = shift;
+  my $set = $this->set or return undef;
+
+  return undef unless grep { ref $_ eq 'HASH' } @$set;
+
+  my (@values, @cumulative);
+  my $total = 0;
+  for my $item (@$set) {
+    if (ref $item eq 'HASH') {
+      $total += $item->{weight} // 1;
+      push @values, $item->{value};
+    } else {
+      $total += 1;
+      push @values, $item;
+    }
+    push @cumulative, $total;
+  }
+  return { values => \@values, cumulative => \@cumulative, total => $total };
+}
+
 sub generate_value {
   my $this = shift;
-  if ($this->set) {
-    return $this->set->[ rand @{$this->set} ];
+  return unless $this->set;
+
+  if (my $w = $this->_weighted) {
+    my $r = rand $w->{total};
+    my $i = 0;
+    $i++ while $w->{cumulative}[$i] <= $r;
+    return $w->{values}[$i];
   }
+
+  return $this->set->[ rand @{$this->set} ];
 }
 1;
 
