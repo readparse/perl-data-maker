@@ -2,12 +2,13 @@ package Data::Maker::Field::DateTime;
 use Moose;
 use DateTime::Event::Random;
 with 'Data::Maker::Field';
+use Data::Dumper;
 
 has start => ( is => 'rw');
 has end => ( is => 'rw');
 has format => ( is => 'rw');
 has relative_to => ( is => 'rw');
-has subtract => ( is => 'rw', isa => 'HashRef'); 
+has subtract => ( is => 'rw', isa => 'HashRef', trigger => \&_check_subtract); 
 has add => ( is => 'rw', isa => 'HashRef');
 has year => ( is => 'rw', isa => 'Num');
 has month => ( is => 'rw', isa => 'Num');
@@ -15,6 +16,8 @@ has day => ( is => 'rw', isa => 'Num');
 has hour => ( is => 'rw', isa => 'Num');
 has minute => ( is => 'rw', isa => 'Num');
 has second => ( is => 'rw', isa => 'Num');
+has year_range => ( is => 'rw', isa => 'HashRef');
+has day_range => ( is => 'rw', isa => 'HashRef');
 
 sub generate_value {
   my ($this, $maker) = @_;
@@ -24,6 +27,7 @@ sub generate_value {
       start => $this->parse_date_arg('start'),
       end => $this->parse_date_arg('end'),
     };
+	print Dumper($args);
     $dt = DateTime::Event::Random->datetime(
       %{$args}
     );
@@ -86,6 +90,28 @@ sub parse_date_arg {
       die "Invalid `$keyword` argument to " . __PACKAGE__;
     }
   }
+}
+
+sub _check_subtract {
+	my ($this, $value) = @_;
+	if (my $year_range = $value->{year_range}) {
+		$value->{years} = to_range($year_range);
+		delete $value->{year_range};
+	}
+	if (my $day_range = $value->{day_range}) {
+		$value->{days} = to_range($day_range);
+		delete $value->{day_range};
+	}
+}
+
+sub to_range {
+	my $range = shift;
+	my $min = $range->{min};
+	my $max = $range->{max};
+	if (defined($min) && defined($max)) {
+		return [$min..$max];
+	}
+	return;
 }
 1;
 
